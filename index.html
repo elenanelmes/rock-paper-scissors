@@ -4,92 +4,77 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors</title>
     <script>
+        const CHOICES = ['rock', 'paper', 'scissors'];
+
         function getHumanChoice() {
             let input = prompt("Enter R, P or S!").toLowerCase();
-            let humanChoice;
 
             switch (input) {
-                case 'r':
-                    humanChoice = 'rock';
-                    break;
-                case 'p':
-                    humanChoice = 'paper';
-                    break;
-                case 's':
-                    humanChoice = 'scissors';
-                    break;
-                default:
-                    humanChoice = 'blank';
+                case 'r': return CHOICES[0];
+                case 'p': return CHOICES[1];
+                case 's': return CHOICES[2];
+                default: return 'blank';
             }
-
-            return humanChoice;
         }
 
         function getComputerChoice() {
-            let randomInt = Math.floor(Math.random() * 3);
-            let computerChoice;
-
-            switch (randomInt) {
-                case 0:
-                    computerChoice = 'rock';
-                    break;
-                case 1:
-                    computerChoice = 'paper';
-                    break;  
-                case 2:
-                    computerChoice = 'scissors';
-                    break;
-            }
-
-            return computerChoice;
+            return CHOICES[Math.floor(Math.random() * 3)];
         }
 
-        function determineWinner(computerChoice, humanChoice) {
+        function determineWinner(humanChoice, computerChoice) {
             if (humanChoice === computerChoice) return 'draw';
             if (humanChoice === 'blank') return 'computer';
 
             const winningConditions = {
-                'rock': 'scissors',
-                'scissors': 'paper',
-                'paper': 'rock'
+                [CHOICES[0]]: CHOICES[2],
+                [CHOICES[1]]: CHOICES[0],
+                [CHOICES[2]]: CHOICES[1]
             };
 
             return winningConditions[humanChoice] === computerChoice ? 'human' : 'computer';
+        }
+
+        function capitaliseChoice(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function playRound(humanChoice, computerChoice) {
+            console.log(`Computer: ${capitaliseChoice(computerChoice)} | Human: ${capitaliseChoice(humanChoice)}`);
+
+            const winner = determineWinner(humanChoice, computerChoice);
+
+            switch (winner) {
+                case 'draw':
+                    console.log("It's a draw!");
+                    console.log('---');
+                    break;
+                case 'human':
+                    console.log(`Human wins! ${capitaliseChoice(humanChoice)} beats ${computerChoice}.`);
+                    console.log('---');
+                    return 'human';
+                case 'computer':
+                    console.log(`Computer wins! ${capitaliseChoice(computerChoice)} beats ${humanChoice}.`);
+                    console.log('---');
+                    return 'computer';
+            }
+
+            return 'draw';
         }
 
         function playGame(rounds) {
             let computerScore = 0;
             let humanScore = 0;
 
-            function playRound(computerChoice, humanChoice) {
-                function capitaliseChoice(choice) {
-                    return choice.charAt(0).toUpperCase() + choice.slice(1);
-                }
-
-                console.log(`Computer: ${capitaliseChoice(computerChoice)} | Human: ${capitaliseChoice(humanChoice)}`);
-
-                const winner = determineWinner(computerChoice, humanChoice);
-
-                if (winner === 'draw') {
-                    console.log("It's draw!");
-                } else if (winner === 'human') {
-                    console.log(`Human wins! ${capitaliseChoice(humanChoice)} beats ${computerChoice}.`);
-                    humanScore++;
-                } else {
-                    console.log(`Computer wins! ${capitaliseChoice(computerChoice)} beats ${humanChoice}.`);
-                    computerScore++;
-                }
-
-                console.log('---');
-
-                return computerScore, humanScore;
-            }
-
             for (i = 0; i < rounds; i++) {
                 const humanSelection = getHumanChoice();
                 const computerSelection = getComputerChoice();
+                const roundWinner = playRound(humanSelection, computerSelection);
 
-                playRound(computerSelection, humanSelection);
+                if (roundWinner === 'human') {
+                    humanScore++;
+                } else {
+                    computerScore++;
+                }
             }
 
             console.log(`Final Score: Computer ${computerScore} – Human ${humanScore}`);
