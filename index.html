@@ -44,6 +44,19 @@
             return computerChoice;
         }
 
+        function determineWinner(computerChoice, humanChoice) {
+            if (humanChoice === computerChoice) return 'draw';
+            if (humanChoice === 'blank') return 'computer';
+
+            const winningConditions = {
+                'rock': 'scissors',
+                'scissors': 'paper',
+                'paper': 'rock'
+            };
+
+            return winningConditions[humanChoice] === computerChoice ? 'human' : 'computer';
+        }
+
         function playGame(rounds) {
             let computerScore = 0;
             let humanScore = 0;
@@ -55,30 +68,17 @@
 
                 console.log(`Computer: ${capitaliseChoice(computerChoice)} | Human: ${capitaliseChoice(humanChoice)}`);
 
-                if (humanChoice === computerChoice) {
-                    console.log("It's a draw!");
-                } else if (humanChoice === 'blank') {
-                    console.log('Computer wins!');
-                    computerScore++;
-                } else if (humanChoice === 'rock' && computerChoice === 'paper') {
-                    console.log('Computer wins! Paper beats Rock.');
-                    computerScore++;
-                } else if (humanChoice === 'rock' && computerChoice === 'scissors') {
-                    console.log('Human wins! Rock beats scissors.');
+                const winner = determineWinner(computerChoice, humanChoice);
+
+                if (winner === 'draw') {
+                    console.log("It's draw!");
+                } else if (winner === 'human') {
+                    console.log(`Human wins! ${capitaliseChoice(humanChoice)} beats ${computerChoice}.`);
                     humanScore++;
-                } else if (humanChoice === 'paper' && computerChoice === 'rock') {
-                    console.log('Human win! Paper beats Rock.');
-                    humanScore++;
-                } else if (humanChoice === 'paper' && computerChoice === 'scissors') {
-                    console.log('Computer wins! Scissors beat Paper.');
+                } else {
+                    console.log(`Computer wins! ${capitaliseChoice(computerChoice)} beats ${humanChoice}.`);
                     computerScore++;
-                } else if (humanChoice === 'scissors' && computerChoice === 'rock') {
-                    console.log('Computer wins! Rock beats scissors.');
-                    computerScore++;
-                } else if (humanChoice === 'scissors' && computerChoice === 'paper') {
-                    console.log('Human wins! Scissors beat paper.');
-                    humanScore++;
-                };
+                }
 
                 console.log('---');
 
@@ -101,7 +101,6 @@
             } else {
                 console.log('*** Computer wins. Better luck next time! ***');
             }
-
         }
 
         playGame(5);
