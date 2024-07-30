@@ -1,85 +1,93 @@
+const buttons = document.querySelectorAll('button');
+const body = document.querySelector('#body');
+const gameContainer = document.querySelector('#game-container');
+const table = document.querySelector('#table');
+
 const CHOICES = ['rock', 'paper', 'scissors'];
+const rounds = 5;
 
-function getHumanChoice() {
-    let input = prompt("Enter R for Rock, P for Paper or S for Scissors!").toLowerCase();
+let computerScore = 0;
+let humanScore = 0;
+let roundCounter = 0;
 
-    switch (input) {
-        case 'r': return CHOICES[0];
-        case 'p': return CHOICES[1];
-        case 's': return CHOICES[2];
-        default: return 'blank';
-    }
-}
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        playRound(button.id);
+    });
+});
 
-function getComputerChoice() {
-    return CHOICES[Math.floor(Math.random() * 3)];
-}
-
-function determineWinner(humanChoice, computerChoice) {
-    if (humanChoice === computerChoice) return 'draw';
-    if (humanChoice === 'blank') return 'computer';
-
-    const winningConditions = {
-        [CHOICES[0]]: CHOICES[2],
-        [CHOICES[1]]: CHOICES[0],
-        [CHOICES[2]]: CHOICES[1]
-    };
-
-    return winningConditions[humanChoice] === computerChoice ? 'human' : 'computer';
-}
-
-function capitaliseChoice(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function playRound(humanChoice, computerChoice) {
-    console.log(`Computer: ${capitaliseChoice(computerChoice)} | Human: ${capitaliseChoice(humanChoice)}`);
-
+function playRound(humanChoice) {
+    const computerChoice = CHOICES[Math.floor(Math.random() * 3)];
     const winner = determineWinner(humanChoice, computerChoice);
 
     switch (winner) {
         case 'draw':
-            console.log("It's a draw!");
-            console.log('---');
             break;
         case 'human':
-            console.log(`Human wins! ${capitaliseChoice(humanChoice)} beats ${computerChoice}.`);
-            console.log('---');
-            return 'human';
+            humanScore++;
+            break;
         case 'computer':
-            console.log(`Computer wins! ${capitaliseChoice(computerChoice)} beats ${humanChoice}.`);
-            console.log('---');
-            return 'computer';
+            computerScore++;
+            break;
+    }
+
+    const tableRow = table.insertRow(roundCounter + 1);
+    const valueRound = tableRow.insertCell(0);
+    const valueHuman = tableRow.insertCell(1);
+    const valueComputer = tableRow.insertCell(2);
+    const valueWinner = tableRow.insertCell(3);
+
+    valueRound.textContent = roundCounter + 1;
+    valueHuman.textContent = humanChoice;
+    valueComputer.textContent = computerChoice;
+    valueWinner.textContent = winner;
+    
+    if (roundCounter === rounds - 1) {
+        gameContainer.removeChild(gameContainer.firstElementChild);
+        announceWinner();
+        endGame();
+    } else {
+        roundCounter++;
     }
 
     return 'draw';
 }
 
-function playGame(rounds) {
-    let computerScore = 0;
-    let humanScore = 0;
+function determineWinner(humanChoice, computerChoice) {
+    if (humanChoice === computerChoice) return 'draw';
 
-    for (i = 0; i < rounds; i++) {
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-        const roundWinner = playRound(humanSelection, computerSelection);
+    const winningConditions = {
+        'rock': 'scissors',
+        'paper': 'rock',
+        'scissors': 'rock'
+    };
 
-        if (roundWinner === 'human') {
-            humanScore++;
-        } else {
-            computerScore++;
-        }
-    }
-
-    console.log(`Final Score: Computer ${computerScore} – Human ${humanScore}`);
-
-    if (humanScore === computerScore) {
-        console.log('Everybody wins!');
-    } else if (humanScore > computerScore) {
-        console.log('*** Congrats! You win. ***');
-    } else {
-        console.log('*** Computer wins. Better luck next time! ***');
-    }
+    return winningConditions[humanChoice] === computerChoice ? 'human' : 'computer';
 }
 
-playGame(5);
+function endGame() {
+    const resetBtn = document.createElement('button');
+    resetBtn.setAttribute('id', 'resetBtn');
+    resetBtn.textContent = 'Play Again';
+    document.body.appendChild(resetBtn);
+
+    resetBtn.addEventListener("click", () => {
+        window.location.reload();
+    });
+}
+
+function announceWinner() {
+    const h3 = document.createElement('h3');
+    console.log('human score: ' + humanScore);
+    console.log('comp score: ' + computerScore);
+
+    if (humanScore === computerScore) {
+        h3.textContent = '*** Everybody wins! ***';
+    } else if (humanScore > computerScore) {
+        h3.textContent = '*** Human wins! ***';
+    } else {
+        h3.textContent = '*** Computer wins! ***';
+    }
+    
+    document.body.appendChild(h3);
+}
