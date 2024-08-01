@@ -126,10 +126,23 @@ function announceWinner() {
     document.body.appendChild(winnerAnnouncement);
 }
 
+function resetGame() {
+    document.querySelector('#btn-reset').remove();
+    document.querySelector('#score-container').remove();
+    document.querySelectorAll('h2').forEach(element => element.remove());
+
+    computerScore = 0;
+    humanScore = 0;
+    roundCounter = 0;
+
+    createChoiceContainer();
+    createScoreContainer();
+}
+
 function createResetButton() {
     const btnReset = createElement('button', { id: 'btn-reset' }, 'Play Again');
     document.body.appendChild(btnReset);
-    btnReset.addEventListener('click', () => window.location.reload());
+    btnReset.addEventListener('click', resetGame);
 }
 
 function createElement(tag, attributes = {}, textContent = '') {
