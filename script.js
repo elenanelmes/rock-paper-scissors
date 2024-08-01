@@ -7,10 +7,6 @@ let computerScore = 0;
 let humanScore = 0;
 let roundCounter = 0;
 
-function capitaliseStr(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
 const btnStart = document.querySelector('#btn-start');
 btnStart.addEventListener('click', startGame);
 
