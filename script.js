@@ -41,7 +41,7 @@ function createChoiceContainer() {
 
 function createScoreContainer() {
     const scoreContainer = createElement('div', { id: 'score-container' });
-    const scoreHeader = createElement('h2', {}, 'Running Score');
+    const scoreHeader = createElement('h2', {id: 'score-header'}, `Human ${humanScore} | Computer ${computerScore}`);
     const scoreTable = createElement('table', { id: 'score-table', style: 'border: 1px solid black;' });
     const thead = createElement('thead');
     const tbody = createElement('tbody');
@@ -57,6 +57,11 @@ function createScoreContainer() {
         tr.appendChild(th);
     });
     thead.appendChild(tr);
+}
+
+function updateScoreHeader() {
+    const scoreHeader = document.querySelector('#score-header');
+    scoreHeader.textContent = `Human ${humanScore} | Computer ${computerScore}`;
 }
 
 function playRound(humanChoice) {
@@ -100,18 +105,14 @@ function updateScoreTable(humanChoice, computerChoice, winner) {
 
     if (winner === 'human') humanScore++;
     if (winner === 'computer') computerScore++;
+
+    updateScoreHeader();
 }
 
 function endGame() {
     document.querySelector('#choice-container').remove();
-    printFinalScore();
     announceWinner();
     createResetButton();
-}
-
-function printFinalScore() {
-    const finalScore = createElement('h2', {}, `Final Score: Human ${humanScore} | Computer ${computerScore}`);
-    document.body.appendChild(finalScore);
 }
 
 function announceWinner() {
@@ -129,7 +130,7 @@ function announceWinner() {
 function resetGame() {
     document.querySelector('#btn-reset').remove();
     document.querySelector('#score-container').remove();
-    document.querySelectorAll('h2').forEach(element => element.remove());
+    document.querySelectorAll('h2').forEach(elem => elem.remove());
 
     computerScore = 0;
     humanScore = 0;
