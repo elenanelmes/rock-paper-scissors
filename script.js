@@ -1,7 +1,7 @@
 const body = document.querySelector('#body');
 
 const CHOICES = ['rock', 'paper', 'scissors'];
-const rounds = 5;
+const ROUNDS = 5;
 
 let computerScore = 0;
 let humanScore = 0;
@@ -12,151 +12,137 @@ function capitaliseStr(str) {
 }
 
 const btnStart = document.querySelector('#btn-start');
-btnStart.addEventListener("click", () => {
+btnStart.addEventListener('click', startGame);
+
+function startGame() {
     btnStart.remove();
+    createChoiceContainer();
+    createScoreContainer();
+}
 
-    const choiceContainer = document.createElement('div');
-    choiceContainer.setAttribute('id', 'choice-container');
-    
-    const choiceHeader = document.createElement('h2');
-    choiceHeader.innerText = 'Make a choice:';
-    choiceContainer.appendChild(choiceHeader);
-    
-    let choiceButtons = document.createElement('div');
-    choiceButtons.setAttribute('id', 'choice-buttons');
-    choiceContainer.appendChild(choiceButtons);
-    
-    function printButtons() {
-        for (let i = 0; i < CHOICES.length; i++) {
-            const btn = document.createElement('button');
-            btn.setAttribute('id', `${CHOICES[i]}`);
-            btn.setAttribute('class', 'btn-choice');
-            btn.innerText = `${CHOICES[i][0].toUpperCase()}` + `${CHOICES[i].slice(1)}`;
-            choiceButtons.appendChild(btn);
-        }
-    };
-    printButtons();
+function createChoiceContainer() {
+    const choiceContainer = createElement('div', { id: 'choice-container' });
+    const choiceHeader = createElement('h2', {}, 'Make a choice:');
+    const choiceButtons = createElement('div', { id: 'choice-buttons' });
 
+    choiceContainer.append(choiceHeader, choiceButtons);
     document.body.appendChild(choiceContainer);
 
-    choiceButtons = document.querySelectorAll('button.btn-choice');
-    choiceButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            playRound(button.id);
-        });
+    CHOICES.forEach(choice => {
+        const btnChoice = createElement('button', {
+            id: choice,
+            class: 'btn-choice'
+        }, capitaliseStr(choice));
+        choiceButtons.appendChild(btnChoice);
     });
 
-    const scoreContainer = document.createElement('div');
-    scoreContainer.setAttribute('id', 'score-container');
-
-    const scoreHeader = document.createElement('h2');
-    scoreHeader.innerText = 'Running Score';
-    scoreContainer.appendChild(scoreHeader);
-
-    const scoreTable = document.createElement('table');
-    scoreTable.setAttribute('id', 'score-table');
-    scoreTable.style.border = '1px solid black';
-    
-    const thead = document.createElement('thead');
-    const tbody = document.createElement('tbody');
-    scoreTable.appendChild(thead);
-    scoreTable.appendChild(tbody);
-    
-    const TABLE_HEADERS = ['round', 'human', 'computer', 'winner'];
-    
-    function printTableHeaders() {
-        const tr = thead.insertRow();
-        for (let i = 0; i < TABLE_HEADERS.length; i++) {
-            const th = tr.insertCell();
-            th.innerText = capitaliseStr(TABLE_HEADERS[i]);
-            tr.appendChild(th);
+    choiceButtons.addEventListener('click', event => {
+        if (event.target.classList.contains('btn-choice')) {
+            playRound(event.target.id);
         }
-    }
-    printTableHeaders();
+    });
+}
 
-    scoreContainer.appendChild(scoreTable);
+function createScoreContainer() {
+    const scoreContainer = createElement('div', { id: 'score-container' });
+    const scoreHeader = createElement('h2', {}, 'Running Score');
+    const scoreTable = createElement('table', { id: 'score-table', style: 'border: 1px solid black;' });
+    const thead = createElement('thead');
+    const tbody = createElement('tbody');
+
+    scoreTable.append(thead, tbody);
+    scoreContainer.append(scoreHeader, scoreTable);
     document.body.appendChild(scoreContainer);
-});
+
+    const headers = ['Round', 'Human', 'Computer', 'Winner'];
+    const tr = createElement('tr');
+    headers.forEach(header => {
+        const th = createElement('th', {}, header);
+        tr.appendChild(th);
+    });
+    thead.appendChild(tr);
+}
 
 function playRound(humanChoice) {
-    const computerChoice = CHOICES[Math.floor(Math.random() * 3)];
+    const computerChoice = CHOICES[Math.floor(Math.random() * CHOICES.length)];
     const winner = determineWinner(humanChoice, computerChoice);
-    const table = document.querySelector('#score-table');
+    updateScoreTable(humanChoice, computerChoice, winner);
 
-    switch (winner) {
-        case 'draw':
-            break;
-        case 'human':
-            humanScore++;
-            break;
-        case 'computer':
-            computerScore++;
-            break;
-    }
-
-    const tr = table.insertRow(roundCounter + 1);
-    const roundVal = tr.insertCell(0);
-    const humanVal = tr.insertCell(1);
-    const computerVal = tr.insertCell(2);
-    const winnerVal = tr.insertCell(3);
-
-    roundVal.textContent = roundCounter + 1;
-    humanVal.textContent = capitaliseStr(humanChoice);
-    computerVal.textContent = capitaliseStr(computerChoice);
-    winnerVal.textContent = capitaliseStr(winner);
-    
-    if (roundCounter === rounds - 1) {
-        const choiceContainer = document.querySelector('#choice-container');
-        if (choiceContainer) choiceContainer.remove();
-        printFinalScore();
-        announceWinner();
+    if (++roundCounter === ROUNDS) {
         endGame();
-    } else {
-        roundCounter++;
     }
-
-    return 'draw';
 }
 
 function determineWinner(humanChoice, computerChoice) {
     if (humanChoice === computerChoice) return 'draw';
 
     const winningConditions = {
-        'rock': 'scissors',
-        'paper': 'rock',
-        'scissors': 'paper'
+        rock: 'scissors',
+        paper: 'rock',
+        scissors: 'paper'
     };
 
     return winningConditions[humanChoice] === computerChoice ? 'human' : 'computer';
 }
 
-function endGame() {
-    const btnReset = document.createElement('button');
-    btnReset.setAttribute('id', 'btn-reset');
-    btnReset.textContent = 'Play Again';
-    document.body.appendChild(btnReset);
+function updateScoreTable(humanChoice, computerChoice, winner) {
+    const table = document.querySelector('#score-table tbody');
+    const tr = createElement('tr');
+    const values = [
+        roundCounter + 1,
+        capitaliseStr(humanChoice),
+        capitaliseStr(computerChoice),
+        capitaliseStr(winner)
+    ];
 
-    btnReset.addEventListener("click", () => {
-        window.location.reload();
+    values.forEach(value => {
+        const td = createElement('td', {}, value);
+        tr.appendChild(td);
     });
+
+    table.appendChild(tr);
+
+    if (winner === 'human') humanScore++;
+    if (winner === 'computer') computerScore++;
+}
+
+function endGame() {
+    document.querySelector('#choice-container').remove();
+    printFinalScore();
+    announceWinner();
+    createResetButton();
 }
 
 function printFinalScore() {
-    const finalScore = document.createElement('h2');
-    finalScore.innerText = `Final Score: Human ${humanScore} | Computer ${computerScore}`;
+    const finalScore = createElement('h2', {}, `Final Score: Human ${humanScore} | Computer ${computerScore}`);
     document.body.appendChild(finalScore);
 }
 
 function announceWinner() {
-    const winnerAnnouncement = document.createElement('h2');
-
-    if (humanScore === computerScore) {
-        winnerAnnouncement.textContent = '*** Everybody wins! ***';
-    } else if (humanScore > computerScore) {
-        winnerAnnouncement.textContent = "*** Human wins! That's you. Congrats! ***";
-    } else {
+    const winnerAnnouncement = createElement('h2');
+    if (humanScore > computerScore) {
+        winnerAnnouncement.textContent = "*** Human wins. That's you. Congrats! ***";
+    } else if (computerScore > humanScore) {
         winnerAnnouncement.textContent = '*** Computer wins! ***';
+    } else {
+        winnerAnnouncement.textContent = '*** Everybody wins! ***';
     }
-    
     document.body.appendChild(winnerAnnouncement);
+}
+
+function createResetButton() {
+    const btnReset = createElement('button', { id: 'btn-reset' }, 'Play Again');
+    document.body.appendChild(btnReset);
+    btnReset.addEventListener('click', () => window.location.reload());
+}
+
+function createElement(tag, attributes = {}, textContent = '') {
+    const element = document.createElement(tag);
+    Object.keys(attributes).forEach(attr => element.setAttribute(attr, attributes[attr]));
+    if (textContent) element.textContent = textContent;
+    return element;
+}
+
+function capitaliseStr(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
