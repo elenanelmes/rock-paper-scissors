@@ -11,9 +11,9 @@ function capitaliseStr(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-const startBtn = document.querySelector('#btn-start');
-startBtn.addEventListener("click", () => {
-    startBtn.remove();
+const btnStart = document.querySelector('#btn-start');
+btnStart.addEventListener("click", () => {
+    btnStart.remove();
 
     const choiceContainer = document.createElement('div');
     choiceContainer.setAttribute('id', 'choice-container');
@@ -131,12 +131,12 @@ function determineWinner(humanChoice, computerChoice) {
 }
 
 function endGame() {
-    const resetBtn = document.createElement('button');
-    resetBtn.setAttribute('id', 'resetBtn');
-    resetBtn.textContent = 'Play Again';
-    document.body.appendChild(resetBtn);
+    const btnReset = document.createElement('button');
+    btnReset.setAttribute('id', 'btn-reset');
+    btnReset.textContent = 'Play Again';
+    document.body.appendChild(btnReset);
 
-    resetBtn.addEventListener("click", () => {
+    btnReset.addEventListener("click", () => {
         window.location.reload();
     });
 }
