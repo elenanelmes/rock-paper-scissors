@@ -41,14 +41,20 @@ function createChoiceContainer() {
 
 function createScoreContainer() {
     const scoreContainer = createElement('div', { id: 'score-container' });
-    const scoreHeader = createElement('h2', {id: 'score-header'}, `Human ${humanScore} | Computer ${computerScore}`);
-    const scoreTable = createElement('table', { id: 'score-table', style: 'border: 1px solid black;' });
+    const scoreHeader = createElement('h2', {id: 'score-header'}, `Human ${humanScore} : Computer ${computerScore}`);
+    scoreContainer.append(scoreHeader);
+    document.body.appendChild(scoreContainer);
+}
+
+function printScoreTable() {
+    const scoreContainer = document.querySelector('#score-container');
+
+    const scoreTable = createElement('table', { id: 'score-table' });
     const thead = createElement('thead');
     const tbody = createElement('tbody');
-
+    
     scoreTable.append(thead, tbody);
-    scoreContainer.append(scoreHeader, scoreTable);
-    document.body.appendChild(scoreContainer);
+    scoreContainer.append(scoreTable);
 
     const headers = ['Round', 'Human', 'Computer', 'Winner'];
     const tr = createElement('tr');
@@ -56,15 +62,19 @@ function createScoreContainer() {
         const th = createElement('th', {}, header);
         tr.appendChild(th);
     });
-    thead.appendChild(tr);
+    thead.appendChild(tr);    
 }
 
 function updateScoreHeader() {
     const scoreHeader = document.querySelector('#score-header');
-    scoreHeader.textContent = `Human ${humanScore} | Computer ${computerScore}`;
+    scoreHeader.textContent = `Human ${humanScore} : Computer ${computerScore}`;
 }
 
 function playRound(humanChoice) {
+    if (roundCounter === 0) {
+        printScoreTable();
+    }
+
     const computerChoice = CHOICES[Math.floor(Math.random() * CHOICES.length)];
     const winner = determineWinner(humanChoice, computerChoice);
     updateScoreTable(humanChoice, computerChoice, winner);
@@ -116,7 +126,7 @@ function endGame() {
 }
 
 function announceWinner() {
-    const winnerAnnouncement = createElement('h2');
+    const winnerAnnouncement = createElement('h2', { id: 'winner-header'});
     if (humanScore > computerScore) {
         winnerAnnouncement.textContent = "*** Human wins. That's you. Congrats! ***";
     } else if (computerScore > humanScore) {

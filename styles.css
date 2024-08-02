@@ -1,0 +1,104 @@
+:root {
+    --accent: #DE6E4B;
+    --dark: #5F454A;
+    --light: #DDD0D2;
+    --border: 4px dotted var(--accent);
+    --border-radius: 0.5rem;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    align-items: center;
+    background: var(--dark);
+    color: var(--light);
+    display: flex;
+    flex-flow: column wrap;
+    font-family: "Grandstander", cursive;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 400;
+    gap: 2rem;
+    padding: 4rem;
+    text-align: center;
+}
+
+button {
+    background: var(--light);
+    border: transparent;
+    border-radius: var(--border-radius);
+    color: var(--dark);
+    font-size: large;
+    font-weight: 600;
+    letter-spacing: 2px;
+    padding: 1rem 1.5rem;
+    text-transform: uppercase;
+    width: fit-content;
+
+    &:hover {
+        background: color-mix(in srgb, var(--accent) 85%, transparent 15%);
+        cursor: pointer;
+    }
+}
+
+h1 {
+    color: var(--accent);
+}
+
+div#choice-container,
+div#score-container {
+    display: flex;
+    flex-flow: column wrap;
+    gap: 1rem;
+}
+
+div#choice-buttons {
+    align-items: center;
+    display: flex;
+    flex-flow: row wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+div#score-container {
+    border: var(--border);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+}
+
+table#score-table {
+    border-block-start: var(--border);
+    padding: 1rem;
+    padding-block-end: 0;
+
+    th,
+    td {
+        padding: 0.5rem;
+    }
+
+    th {
+        font-size: 1.25rem;
+        font-weight: 800;
+    }
+}
+
+h2#winner-header {
+    animation: 1s ease-in-out infinite flash;
+    color: var(--accent);
+}
+
+@keyframes flash {
+    0% {
+        color: var(--accent);
+    }
+    50% {
+        color: var(--light);
+    }
+    100% {
+        color: var(--accent);
+    }
+}
