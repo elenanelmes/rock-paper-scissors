@@ -87,7 +87,7 @@ table#score-table {
     }
 }
 
-h2#winner-header {
+h1#winner-header {
     animation: 1s ease-in-out infinite flash;
     color: var(--accent);
 }

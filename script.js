@@ -16,6 +16,7 @@ const btnStart = document.querySelector('#btn-start');
 btnStart.addEventListener('click', startGame);
 
 function startGame() {
+    document.querySelector('h1').remove();
     btnStart.remove();
     createChoiceContainer();
     createScoreContainer();
@@ -51,7 +52,7 @@ function createScoreContainer() {
     document.body.appendChild(scoreContainer);
 }
 
-function printScoreTable() {
+function createScoreTable() {
     const scoreContainer = document.querySelector('#score-container');
 
     const scoreTable = createElement('table', { id: 'score-table' });
@@ -77,7 +78,7 @@ function updateScoreHeader() {
 
 function playRound(humanChoice) {
     if (roundCounter === 0) {
-        printScoreTable();
+        createScoreTable();
     }
 
     const computerChoice = CHOICES[Math.floor(Math.random() * CHOICES.length)];
@@ -131,7 +132,7 @@ function endGame() {
 }
 
 function announceWinner(winner) {
-    const winnerHeader = createElement('h2', { id: 'winner-header'});
+    const winnerHeader = createElement('h1', { id: 'winner-header'});
     const decorator = '***';
     const winnerAnnouncementText = {
         computer: 'Computer wins!',
@@ -140,12 +141,13 @@ function announceWinner(winner) {
     };
 
     winnerHeader.innerHTML = decorator + ' ' + winnerAnnouncementText[winner] + ' ' + decorator;
-    document.body.appendChild(winnerHeader);
+    document.body.prepend(winnerHeader);
 }
 
 function resetGame() {
-    document.querySelector('#btn-reset').remove();
+    document.querySelector('#winner-header').remove();
     document.querySelector('#score-container').remove();
+    document.querySelector('#btn-reset').remove();
     document.querySelectorAll('h2').forEach(elem => elem.remove());
 
     computerScore = 0;
