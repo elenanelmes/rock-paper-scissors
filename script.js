@@ -131,16 +131,19 @@ function endGame() {
     createResetButton();
 }
 
-function announceWinner(winner) {
+function announceWinner() {
     const winnerHeader = createElement('h1', { id: 'winner-header'});
-    const decorator = '***';
-    const winnerAnnouncementText = {
-        computer: 'Computer wins!',
-        draw: 'Everybody wins!',
-        human: "Human wins. That's you. Congrats!"
-    };
+    let winnerAnnouncement = '';
 
-    winnerHeader.innerHTML = decorator + ' ' + winnerAnnouncementText[winner] + ' ' + decorator;
+    if (humanScore > computerScore) {
+        winnerAnnouncement = "Human wins. That's you. Congrats!";
+    } else if (computerScore > humanScore) {
+        winnerAnnouncement = 'Computer wins!';
+    } else {
+        winnerAnnouncement = 'Everybody wins!';
+    }
+
+    winnerHeader.innerHTML = winnerAnnouncement;
     document.body.prepend(winnerHeader);
 }
 
