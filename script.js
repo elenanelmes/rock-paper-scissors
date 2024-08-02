@@ -42,7 +42,7 @@ function createChoiceContainer() {
 function createScoreContainer() {
     const scoreContainer = createElement('div', { id: 'score-container' });
     const scoreHeader = createElement('h2', {id: 'score-header'}, `Human ${humanScore} | Computer ${computerScore}`);
-    const scoreTable = createElement('table', { id: 'score-table', style: 'border: 1px solid black;' });
+    const scoreTable = createElement('table', { id: 'score-table' });
     const thead = createElement('thead');
     const tbody = createElement('tbody');
 
@@ -116,7 +116,7 @@ function endGame() {
 }
 
 function announceWinner() {
-    const winnerAnnouncement = createElement('h2');
+    const winnerAnnouncement = createElement('h2', { id: 'winner-header'});
     if (humanScore > computerScore) {
         winnerAnnouncement.textContent = "*** Human wins. That's you. Congrats! ***";
     } else if (computerScore > humanScore) {
