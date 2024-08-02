@@ -1,6 +1,11 @@
 const body = document.querySelector('#body');
 
 const CHOICES = ['rock', 'paper', 'scissors'];
+const EMOJIS = {
+    rock: '🪨',
+    paper: '📄',
+    scissors: '✂️'
+};
 const ROUNDS = 5;
 
 let computerScore = 0;
@@ -28,7 +33,7 @@ function createChoiceContainer() {
         const btnChoice = createElement('button', {
             id: choice,
             class: 'btn-choice'
-        }, capitaliseStr(choice));
+        }, formatChoice(choice));
         choiceButtons.appendChild(btnChoice);
     });
 
@@ -101,8 +106,8 @@ function updateScoreTable(humanChoice, computerChoice, winner) {
     const tr = createElement('tr');
     const values = [
         roundCounter + 1,
-        capitaliseStr(humanChoice),
-        capitaliseStr(computerChoice),
+        formatChoice(humanChoice),
+        formatChoice(computerChoice),
         capitaliseStr(winner)
     ];
 
@@ -165,4 +170,8 @@ function createElement(tag, attributes = {}, textContent = '') {
 
 function capitaliseStr(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function formatChoice(choice) {
+    return `${EMOJIS[choice]}` + ' ' + capitaliseStr(choice);
 }
