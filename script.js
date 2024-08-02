@@ -85,6 +85,7 @@ function playRound(humanChoice) {
     updateScoreTable(humanChoice, computerChoice, winner);
 
     if (++roundCounter === ROUNDS) {
+        announceWinner(winner);
         endGame();
     }
 }
@@ -126,20 +127,20 @@ function updateScoreTable(humanChoice, computerChoice, winner) {
 
 function endGame() {
     document.querySelector('#choice-container').remove();
-    announceWinner();
     createResetButton();
 }
 
-function announceWinner() {
-    const winnerAnnouncement = createElement('h2', { id: 'winner-header'});
-    if (humanScore > computerScore) {
-        winnerAnnouncement.textContent = "*** Human wins. That's you. Congrats! ***";
-    } else if (computerScore > humanScore) {
-        winnerAnnouncement.textContent = '*** Computer wins! ***';
-    } else {
-        winnerAnnouncement.textContent = '*** Everybody wins! ***';
-    }
-    document.body.appendChild(winnerAnnouncement);
+function announceWinner(winner) {
+    const winnerHeader = createElement('h2', { id: 'winner-header'});
+    const decorator = '***';
+    const winnerAnnouncementText = {
+        computer: 'Computer wins!',
+        draw: 'Everybody wins!',
+        human: "Human wins. That's you. Congrats!"
+    };
+
+    winnerHeader.innerHTML = decorator + ' ' + winnerAnnouncementText[winner] + ' ' + decorator;
+    document.body.appendChild(winnerHeader);
 }
 
 function resetGame() {
