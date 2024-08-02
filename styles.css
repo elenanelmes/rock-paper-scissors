@@ -23,7 +23,8 @@ body {
     font-style: normal;
     font-weight: 400;
     gap: 2rem;
-    padding: 4rem;
+    padding-block-start: 4rem;
+    padding-inline: 1rem;
     text-align: center;
 }
 
@@ -72,12 +73,12 @@ div#score-container {
 
 table#score-table {
     border-block-start: var(--border);
-    padding: 1rem;
-    padding-block-end: 0;
+    padding-block-start: 1rem;
 
     th,
     td {
         padding: 0.5rem;
+        text-wrap: nowrap;
     }
 
     th {
